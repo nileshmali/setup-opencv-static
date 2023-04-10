@@ -2,7 +2,7 @@ import {OpencvPaths} from './downloader'
 import {exec} from '@actions/exec'
 
 export async function buildAndInstallOpenCV(paths: OpencvPaths): Promise<void> {
-  let buildArgs = [
+  const buildArgs = [
     '-D BUILD_CUDA_STUBS=OFF',
     '-D BUILD_DOCS=OFF',
     '-D BUILD_EXAMPLES=OFF',

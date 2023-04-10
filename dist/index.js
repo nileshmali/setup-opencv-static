@@ -8,117 +8,116 @@ require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.buildAndInstallOpenCV = void 0;
-const core_1 = __nccwpck_require__(2186);
 const exec_1 = __nccwpck_require__(1514);
 async function buildAndInstallOpenCV(paths) {
-    (0, core_1.exportVariable)('BUILD_FLAGS', ` -D BUILD_CUDA_STUBS=OFF
-      -D BUILD_DOCS=OFF
-      -D BUILD_EXAMPLES=OFF
-      -D BUILD_IPP_IW=ON
-      -D BUILD_ITT=ON
-      -D BUILD_JASPER=OFF
-      -D BUILD_JAVA=OFF
-      -D BUILD_JPEG=ON
-      -D BUILD_OPENEXR=OFF
-      -D BUILD_OPENJPEG=ON
-      -D BUILD_PERF_TESTS=OFF
-      -D BUILD_PNG=ON
-      -D BUILD_PROTOBUF=ON
-      -D BUILD_SHARED_LIBS=OFF
-      -D BUILD_TBB=ON
-      -D BUILD_TESTS=OFF
-      -D BUILD_TIFF=ON
-      -D BUILD_WEBP=ON
-      -D BUILD_WITH_DEBUG_INFO=OFF
-      -D BUILD_WITH_DYNAMIC_IPP=OFF
-      -D BUILD_ZLIB=ON
-      -D BUILD_opencv_apps=OFF
-      -D BUILD_opencv_python2=OFF
-      -D BUILD_opencv_python3=OFF
-      -D CMAKE_BUILD_TYPE=Release
-      -D CMAKE_INSTALL_PREFIX=/usr
-      -D CV_DISABLE_OPTIMIZATION=OFF
-      -D CV_ENABLE_INTRINSICS=ON
-      -D ENABLE_CONFIG_VERIFICATION=OFF
-      -D ENABLE_FAST_MATH=OFF
-      -D ENABLE_LTO=OFF
-      -D ENABLE_PIC=ON
-      -D ENABLE_PRECOMPILED_HEADERS=OFF
-      -D INSTALL_CREATE_DISTRIB=OFF
-      -D INSTALL_C_EXAMPLES=OFF
-      -D INSTALL_PYTHON_EXAMPLES=OFF
-      -D INSTALL_TESTS=OFF
-      -D OPENCV_ENABLE_MEMALIGN=OFF
-      -D OPENCV_ENABLE_NONFREE=ON
-      -D OPENCV_FORCE_3RDPARTY_BUILD=OFF
-      -D OPENCV_GENERATE_PKGCONFIG=OFF
-      -D PROTOBUF_UPDATE_FILES=OFF
-      -D WITH_1394=OFF
-      -D WITH_ADE=ON
-      -D WITH_ARAVIS=OFF
-      -D WITH_CLP=OFF
-      -D WITH_CUBLAS=OFF
-      -D WITH_CUDA=OFF
-      -D WITH_CUFFT=OFF
-      -D WITH_EIGEN=ON
-      -D WITH_FFMPEG=OFF
-      -D WITH_GDAL=OFF
-      -D WITH_GDCM=OFF
-      -D WITH_GIGEAPI=OFF
-      -D WITH_GPHOTO2=OFF
-      -D WITH_GSTREAMER=OFF
-      -D WITH_GSTREAMER_0_10=OFF
-      -D WITH_GTK=OFF
-      -D WITH_GTK_2_X=OFF
-      -D WITH_HALIDE=OFF
-      -D WITH_IMGCODEC_HDcR=ON
-      -D WITH_IMGCODEC_PXM=ON
-      -D WITH_IMGCODEC_SUNRASTER=ON
-      -D WITH_INF_ENGINE=OFF
-      -D WITH_IPP=ON
-      -D WITH_ITT=ON
-      -D WITH_JASPER=OFF
-      -D WITH_JPEG=ON
-      -D WITH_LAPACK=OFF
-      -D WITH_LIBV4L=OFF
-      -D WITH_MATLAB=OFF
-      -D WITH_MFX=OFF
-      -D WITH_OPENCL=OFF
-      -D WITH_OPENCLAMDBLAS=OFF
-      -D WITH_OPENCLAMDFFT=OFF
-      -D WITH_OPENCL_SVM=OFF
-      -D WITH_OPENEXR=OFF
-      -D WITH_OPENGL=OFF
-      -D WITH_OPENMP=OFF
-      -D WITH_OPENNI2=OFF
-      -D WITH_OPENNI=OFF
-      -D WITH_OPENVX=OFF
-      -D WITH_PNG=ON
-      -D WITH_PROTOBUF=ON
-      -D WITH_PTHREADS_PF=ON
-      -D WITH_PVAPI=OFF
-      -D WITH_QT=OFF
-      -D WITH_QUIRC=ON
-      -D WITH_TBB=ON
-      -D WITH_TIFF=ON
-      -D WITH_UNICAP=OFF
-      -D WITH_V4L=ON
-      -D WITH_VA=ON
-      -D WITH_VA_INTEL=ON
-      -D WITH_VTK=ON
-      -D WITH_WEBP=ON
-      -D WITH_XIMEA=OFF
-      -D WITH_XINE=OFF
-      -D BUILD_opencv_freetype=OFF
-      -D OPENCV_FORCE_3RDPARTY_BUILD=ON
-      -D WITH_FREETYPE=OFF
-  `);
-    const args = ['$BUILD_FLAGS', '-D CMAKE_INSTALL_PREFIX='];
-    if (paths.opencvContrib) {
-        args.push(`-D OPENCV_EXTRA_MODULES_PATH=${paths.opencvContrib}/modules`);
+    const buildArgs = [
+        '-D BUILD_CUDA_STUBS=OFF',
+        '-D BUILD_DOCS=OFF',
+        '-D BUILD_EXAMPLES=OFF',
+        '-D BUILD_IPP_IW=ON',
+        '-D BUILD_ITT=ON',
+        '-D BUILD_JASPER=OFF',
+        '-D BUILD_JAVA=OFF',
+        '-D BUILD_JPEG=ON',
+        '-D BUILD_OPENEXR=OFF',
+        '-D BUILD_OPENJPEG=ON',
+        '-D BUILD_PERF_TESTS=OFF',
+        '-D BUILD_PNG=ON',
+        '-D BUILD_PROTOBUF=ON',
+        '-D BUILD_SHARED_LIBS=OFF',
+        '-D BUILD_TBB=ON',
+        '-D BUILD_TESTS=OFF',
+        '-D BUILD_TIFF=ON',
+        '-D BUILD_WEBP=ON',
+        '-D BUILD_WITH_DEBUG_INFO=OFF',
+        '-D BUILD_WITH_DYNAMIC_IPP=OFF',
+        '-D BUILD_ZLIB=ON',
+        '-D BUILD_opencv_apps=OFF',
+        '-D BUILD_opencv_python2=OFF',
+        '-D BUILD_opencv_python3=OFF',
+        '-D CMAKE_BUILD_TYPE=Release',
+        '-D CV_DISABLE_OPTIMIZATION=OFF',
+        '-D CV_ENABLE_INTRINSICS=ON',
+        '-D ENABLE_CONFIG_VERIFICATION=OFF',
+        '-D ENABLE_FAST_MATH=OFF',
+        '-D ENABLE_LTO=OFF',
+        '-D ENABLE_PIC=ON',
+        '-D ENABLE_PRECOMPILED_HEADERS=OFF',
+        '-D INSTALL_CREATE_DISTRIB=OFF',
+        '-D INSTALL_C_EXAMPLES=OFF',
+        '-D INSTALL_PYTHON_EXAMPLES=OFF',
+        '-D INSTALL_TESTS=OFF',
+        '-D OPENCV_ENABLE_MEMALIGN=OFF',
+        '-D OPENCV_ENABLE_NONFREE=ON',
+        '-D OPENCV_FORCE_3RDPARTY_BUILD=OFF',
+        '-D OPENCV_GENERATE_PKGCONFIG=OFF',
+        '-D PROTOBUF_UPDATE_FILES=OFF',
+        '-D WITH_1394=OFF',
+        '-D WITH_ADE=ON',
+        '-D WITH_ARAVIS=OFF',
+        '-D WITH_CLP=OFF',
+        '-D WITH_CUBLAS=OFF',
+        '-D WITH_CUDA=OFF',
+        '-D WITH_CUFFT=OFF',
+        '-D WITH_EIGEN=ON',
+        '-D WITH_FFMPEG=OFF',
+        '-D WITH_GDAL=OFF',
+        '-D WITH_GDCM=OFF',
+        '-D WITH_GIGEAPI=OFF',
+        '-D WITH_GPHOTO2=OFF',
+        '-D WITH_GSTREAMER=OFF',
+        '-D WITH_GSTREAMER_0_10=OFF',
+        '-D WITH_GTK=OFF',
+        '-D WITH_GTK_2_X=OFF',
+        '-D WITH_HALIDE=OFF',
+        '-D WITH_IMGCODEC_HDcR=ON',
+        '-D WITH_IMGCODEC_PXM=ON',
+        '-D WITH_IMGCODEC_SUNRASTER=ON',
+        '-D WITH_INF_ENGINE=OFF',
+        '-D WITH_IPP=ON',
+        '-D WITH_ITT=ON',
+        '-D WITH_JASPER=OFF',
+        '-D WITH_JPEG=ON',
+        '-D WITH_LAPACK=OFF',
+        '-D WITH_LIBV4L=OFF',
+        '-D WITH_MATLAB=OFF',
+        '-D WITH_MFX=OFF',
+        '-D WITH_OPENCL=OFF',
+        '-D WITH_OPENCLAMDBLAS=OFF',
+        '-D WITH_OPENCLAMDFFT=OFF',
+        '-D WITH_OPENCL_SVM=OFF',
+        '-D WITH_OPENEXR=OFF',
+        '-D WITH_OPENGL=OFF',
+        '-D WITH_OPENMP=OFF',
+        '-D WITH_OPENNI2=OFF',
+        '-D WITH_OPENNI=OFF',
+        '-D WITH_OPENVX=OFF',
+        '-D WITH_PNG=ON',
+        '-D WITH_PROTOBUF=ON',
+        '-D WITH_PTHREADS_PF=ON',
+        '-D WITH_PVAPI=OFF',
+        '-D WITH_QT=OFF',
+        '-D WITH_QUIRC=ON',
+        '-D WITH_TBB=ON',
+        '-D WITH_TIFF=ON',
+        '-D WITH_UNICAP=OFF',
+        '-D WITH_V4L=ON',
+        '-D WITH_VA=ON',
+        '-D WITH_VA_INTEL=ON',
+        '-D WITH_VTK=ON',
+        '-D WITH_WEBP=ON',
+        '-D WITH_XIMEA=OFF',
+        '-D WITH_XINE=OFF',
+        '-D BUILD_opencv_freetype=OFF',
+        '-D OPENCV_FORCE_3RDPARTY_BUILD=ON',
+        '-D WITH_FREETYPE=OFF'
+    ];
+    buildArgs.push('-D CMAKE_INSTALL_PREFIX=');
+    if ((paths.opencvContrib ?? '').length > 0) {
+        buildArgs.push(`-D OPENCV_EXTRA_MODULES_PATH=${paths.opencvContrib}/modules`);
     }
-    args.push(paths.opencv);
-    await (0, exec_1.exec)('cmake', [...args]);
+    buildArgs.push(paths.opencv);
+    await (0, exec_1.exec)('cmake', [...buildArgs]);
     await (0, exec_1.exec)('make', [`-j"$(nproc)"`]);
     await (0, exec_1.exec)(`sudo make -j"$(nproc)" install`);
 }
@@ -183,21 +182,21 @@ async function downloadOpenCV() {
     core.addPath(cachedOpencvPath);
     core.info(`OpenCV cached to ${cachedOpencvPath}`);
     const opencvContrib = core.getBooleanInput('opencv-contrib');
-    let opencvContribPath;
+    let cachedOpencvContribPath;
     if (opencvContrib) {
         core.info('try to setup OpenCV contrib version: ${opencvVersion}');
         const opencvContribDownloadPath = await (0, tool_cache_1.downloadTool)((0, util_1.format)(GZIP_CONTRIB_URL, opencvVersion));
-        opencvContribPath = await (0, tool_cache_1.extractTar)(opencvContribDownloadPath);
+        const opencvContribPath = await (0, tool_cache_1.extractTar)(opencvContribDownloadPath);
         core.info(`OpenCV contrib extracted to ${opencvContribPath}`);
         // Cache opencv contrib
-        const cachedOpencvContribPath = await (0, tool_cache_1.cacheDir)(opencvContribPath, 'opencv-contrib', opencvVersion);
+        cachedOpencvContribPath = await (0, tool_cache_1.cacheDir)(opencvContribPath, 'opencv-contrib', opencvVersion);
         core.addPath(cachedOpencvContribPath);
         core.info(`OpenCV contrib cached to ${cachedOpencvContribPath}`);
     }
     core.endGroup();
     return {
         opencv: cachedOpencvPath,
-        opencvContrib: opencvContribPath
+        opencvContrib: cachedOpencvContribPath
     };
 }
 exports.downloadOpenCV = downloadOpenCV;
