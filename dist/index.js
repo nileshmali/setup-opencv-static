@@ -142,8 +142,8 @@ async function buildAndInstallOpenCV(paths) {
     }
     buildArgs.push(paths.opencv);
     await (0, exec_1.exec)('cmake', [...buildArgs]);
-    await (0, exec_1.exec)('make', [`-j"$(nproc)"`]);
-    await (0, exec_1.exec)(`sudo make -j"$(nproc)" install`);
+    await (0, exec_1.exec)('make', [`-j$(nproc)`]);
+    await (0, exec_1.exec)(`sudo make -j$(nproc) install`);
     core.endGroup();
 }
 exports.buildAndInstallOpenCV = buildAndInstallOpenCV;

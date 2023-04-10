@@ -112,7 +112,7 @@ export async function buildAndInstallOpenCV(paths: OpencvPaths): Promise<void> {
   }
   buildArgs.push(paths.opencv)
   await exec('cmake', [...buildArgs])
-  await exec('make', [`-j"$(nproc)"`])
-  await exec(`sudo make -j"$(nproc)" install`)
+  await exec('make', [`-j$(nproc)`])
+  await exec(`sudo make -j$(nproc) install`)
   core.endGroup()
 }
