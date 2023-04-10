@@ -113,7 +113,7 @@ export async function buildAndInstallOpenCV(version: string): Promise<void> {
     '-D WITH_FREETYPE=OFF'
   ]
 
-  if (core.getBooleanInput('opencv-contrib')) {
+  if (core.getInput('opencv-contrib') === 'true') {
     buildArgs.push(`-D OPENCV_EXTRA_MODULES_PATH=/opt/opencv_contrib/opencv_contrib-${version}/modules`)
   }
 

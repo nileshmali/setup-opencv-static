@@ -143,7 +143,7 @@ async function buildAndInstallOpenCV(version) {
         '-D OPENCV_FORCE_3RDPARTY_BUILD=ON',
         '-D WITH_FREETYPE=OFF'
     ];
-    if (core.getBooleanInput('opencv-contrib')) {
+    if (core.getInput('opencv-contrib') === 'true') {
         buildArgs.push(`-D OPENCV_EXTRA_MODULES_PATH=/opt/opencv_contrib/opencv_contrib-${version}/modules`);
     }
     if (core.getBooleanInput('with-sccache')) {
@@ -226,8 +226,7 @@ async function downloadOpenCV() {
         const opencvDownloadPath = await (0, tool_cache_1.downloadTool)((0, util_1.format)(GZIP_OPENCV_URL, opencvVersion));
         const opencvPath = await (0, tool_cache_1.extractTar)(opencvDownloadPath, '/opt/opencv');
         core.info(`OpenCV extracted to ${opencvPath}`);
-        const opencvContrib = core.getBooleanInput('opencv-contrib');
-        if (opencvContrib) {
+        if (core.getInput('opencv-contrib') === 'true') {
             core.info(`try to setup OpenCV contrib version: ${opencvVersion}`);
             const opencvContribDownloadPath = await (0, tool_cache_1.downloadTool)((0, util_1.format)(GZIP_CONTRIB_URL, opencvVersion));
             const opencvContribPath = await (0, tool_cache_1.extractTar)(opencvContribDownloadPath, '/opt/opencv_contrib');

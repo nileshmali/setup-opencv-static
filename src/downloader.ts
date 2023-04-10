@@ -28,8 +28,7 @@ export async function downloadOpenCV(): Promise<string> {
     const opencvDownloadPath = await downloadTool(format(GZIP_OPENCV_URL, opencvVersion))
     const opencvPath = await extractTar(opencvDownloadPath, '/opt/opencv')
     core.info(`OpenCV extracted to ${opencvPath}`)
-    const opencvContrib = core.getBooleanInput('opencv-contrib')
-    if (opencvContrib) {
+    if (core.getInput('opencv-contrib') === 'true') {
       core.info(`try to setup OpenCV contrib version: ${opencvVersion}`)
       const opencvContribDownloadPath = await downloadTool(format(GZIP_CONTRIB_URL, opencvVersion))
       const opencvContribPath = await extractTar(opencvContribDownloadPath, '/opt/opencv_contrib')
