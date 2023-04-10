@@ -6,7 +6,7 @@ inputs:
     description: "OpenCV version to be installed."
   opencv-contrib:
     description: "If opencv-contrib (extra modules) should be included in the installation."
-    default: "false"
+    default: "true"
   github-token:
     description: "GitHub token to be used for downloading releases."
     required: true
