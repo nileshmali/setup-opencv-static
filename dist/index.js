@@ -33,6 +33,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.buildAndInstallOpenCV = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const exec_1 = __nccwpck_require__(1514);
+const system_1 = __nccwpck_require__(5785);
 async function buildAndInstallOpenCV(paths) {
     core.startGroup('Build and install OpenCV');
     const buildArgs = [
@@ -142,8 +143,8 @@ async function buildAndInstallOpenCV(paths) {
     }
     buildArgs.push(paths.opencv);
     await (0, exec_1.exec)('cmake', [...buildArgs]);
-    await (0, exec_1.exec)('make', [`-j$(nproc)`]);
-    await (0, exec_1.exec)(`sudo make -j$(nproc) install`);
+    await (0, exec_1.exec)('make', [`-j${(0, system_1.nproc)()}`]);
+    await (0, exec_1.exec)(`sudo make -j${(0, system_1.nproc)()} install`);
     core.endGroup();
 }
 exports.buildAndInstallOpenCV = buildAndInstallOpenCV;
@@ -337,7 +338,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.platform = exports.isMac = exports.isLinux = exports.isWindows = void 0;
+exports.nproc = exports.platform = exports.isMac = exports.isLinux = exports.isWindows = void 0;
 const os_1 = __importDefault(__nccwpck_require__(2037));
 function isWindows() {
     return os_1.default.platform() === 'win32';
@@ -355,6 +356,10 @@ function platform() {
     return os_1.default.platform();
 }
 exports.platform = platform;
+function nproc() {
+    return os_1.default.cpus().length;
+}
+exports.nproc = nproc;
 
 
 /***/ }),

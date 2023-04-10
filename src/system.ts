@@ -13,3 +13,7 @@ export function isMac(): boolean {
 export function platform(): string {
   return os.platform()
 }
+
+export function nproc(): number {
+  return os.cpus().length
+}
