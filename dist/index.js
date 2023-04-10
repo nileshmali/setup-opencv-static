@@ -141,6 +141,10 @@ async function buildAndInstallOpenCV(paths) {
     if ((paths.opencvContrib ?? '').length > 0) {
         buildArgs.push(`-D OPENCV_EXTRA_MODULES_PATH=${paths.opencvContrib}/modules`);
     }
+    if (core.getBooleanInput('with-sccache')) {
+        buildArgs.push('-D CMAKE_C_COMPILER_LAUNCHER=sccache');
+        buildArgs.push('-D CMAKE_CXX_COMPILER_LAUNCHER=sccache');
+    }
     buildArgs.push(paths.opencv);
     await (0, exec_1.exec)('cmake', [...buildArgs]);
     await (0, exec_1.exec)('make', [`-j${(0, system_1.nproc)()}`]);
@@ -200,22 +204,28 @@ async function downloadOpenCV() {
         opencvVersion = release.data.tag_name;
     }
     core.info(`try to setup OpenCV version: ${opencvVersion}`);
-    const opencvDownloadPath = await (0, tool_cache_1.downloadTool)((0, util_1.format)(GZIP_OPENCV_URL, opencvVersion));
-    const opencvPath = await (0, tool_cache_1.extractTar)(opencvDownloadPath);
-    core.info(`OpenCV extracted to ${opencvPath}`);
-    // Cache opencv
-    const cachedOpencvPath = await (0, tool_cache_1.cacheDir)(opencvPath, 'opencv', opencvVersion);
+    let cachedOpencvPath = (0, tool_cache_1.find)('opencv', opencvVersion);
+    if (cachedOpencvPath.length === 0) {
+        const opencvDownloadPath = await (0, tool_cache_1.downloadTool)((0, util_1.format)(GZIP_OPENCV_URL, opencvVersion));
+        const opencvPath = await (0, tool_cache_1.extractTar)(opencvDownloadPath);
+        core.info(`OpenCV extracted to ${opencvPath}`);
+        // Cache opencv
+        cachedOpencvPath = await (0, tool_cache_1.cacheDir)(opencvPath, 'opencv', opencvVersion);
+    }
     core.addPath(cachedOpencvPath);
     core.info(`OpenCV cached to ${cachedOpencvPath}`);
     const opencvContrib = core.getBooleanInput('opencv-contrib');
     let cachedOpencvContribPath;
     if (opencvContrib) {
         core.info(`try to setup OpenCV contrib version: ${opencvVersion}`);
-        const opencvContribDownloadPath = await (0, tool_cache_1.downloadTool)((0, util_1.format)(GZIP_CONTRIB_URL, opencvVersion));
-        const opencvContribPath = await (0, tool_cache_1.extractTar)(opencvContribDownloadPath);
-        core.info(`OpenCV contrib extracted to ${opencvContribPath}`);
-        // Cache opencv contrib
-        cachedOpencvContribPath = await (0, tool_cache_1.cacheDir)(opencvContribPath, 'opencv-contrib', opencvVersion);
+        cachedOpencvContribPath = (0, tool_cache_1.find)('opencv-contrib', opencvVersion);
+        if (cachedOpencvContribPath.length === 0) {
+            const opencvContribDownloadPath = await (0, tool_cache_1.downloadTool)((0, util_1.format)(GZIP_CONTRIB_URL, opencvVersion));
+            const opencvContribPath = await (0, tool_cache_1.extractTar)(opencvContribDownloadPath);
+            core.info(`OpenCV contrib extracted to ${opencvContribPath}`);
+            // Cache opencv contrib
+            cachedOpencvContribPath = await (0, tool_cache_1.cacheDir)(opencvContribPath, 'opencv-contrib', opencvVersion);
+        }
         core.addPath(cachedOpencvContribPath);
         core.info(`OpenCV contrib cached to ${cachedOpencvContribPath}`);
     }

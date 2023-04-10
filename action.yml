@@ -10,6 +10,9 @@ inputs:
   github-token:
     description: "GitHub token to be used for downloading releases."
     required: true
+  with-sccache:
+    description: "If sccache should be used for caching compilation results."
+    default: "false"
 runs:
   using: "node16"
   main: "dist/index.js"

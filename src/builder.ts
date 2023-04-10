@@ -111,6 +111,12 @@ export async function buildAndInstallOpenCV(paths: OpencvPaths): Promise<void> {
   if ((paths.opencvContrib ?? '').length > 0) {
     buildArgs.push(`-D OPENCV_EXTRA_MODULES_PATH=${paths.opencvContrib}/modules`)
   }
+
+  if (core.getBooleanInput('with-sccache')) {
+    buildArgs.push('-D CMAKE_C_COMPILER_LAUNCHER=sccache')
+    buildArgs.push('-D CMAKE_CXX_COMPILER_LAUNCHER=sccache')
+  }
+
   buildArgs.push(paths.opencv)
   await exec('cmake', [...buildArgs])
   await exec('make', [`-j${nproc()}`])

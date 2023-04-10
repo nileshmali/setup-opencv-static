@@ -17,8 +17,13 @@ jobs:
           npm run all
   test: # make sure the action works on a clean machine without building
     runs-on: ubuntu-latest
+    env:
+      SCCACHE_GHA_ENABLED: 'true'
     steps:
       - uses: actions/checkout@v3
+      - name: Run sccache-cache
+        uses: mozilla-actions/sccache-action@v0.0.3
       - uses: ./
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          with-sccache: 'true'
