@@ -7,6 +7,7 @@ const GZIP_OPENCV_URL = 'https://github.com/opencv/opencv/archive/refs/tags/%s.t
 const GZIP_CONTRIB_URL = 'https://github.com/opencv/opencv_contrib/archive/refs/tags/%s.tar.gz'
 
 export interface OpencvPaths {
+  version: string
   opencv: string
   opencvContrib?: string
 }
@@ -51,6 +52,7 @@ export async function downloadOpenCV(): Promise<OpencvPaths> {
   }
   core.endGroup()
   return {
+    version: opencvVersion,
     opencv: `${cachedOpencvPath}/opencv-${opencvVersion}`,
     opencvContrib: `${cachedOpencvContribPath}/opencv_contrib-${opencvVersion}`
   }

@@ -2,7 +2,8 @@ import * as core from '@actions/core'
 import {OpencvPaths} from './downloader'
 import {exec} from '@actions/exec'
 import {mkdirP, rmRF} from '@actions/io'
-import {nproc} from './system'
+import {saveCache, restoreCache} from '@actions/cache'
+import {nproc, platform} from './system'
 
 const BUILD_DIR = '/opt/opencv/build'
 
@@ -123,12 +124,18 @@ export async function buildAndInstallOpenCV(paths: OpencvPaths): Promise<void> {
   }
 
   buildArgs.push(paths.opencv)
-  // Create build directory
-  await mkdirP(BUILD_DIR)
+  const cacheKey = `opencv-${paths.version}-${platform()}-${process.arch}`
+  const cacheHit = await restoreCache([BUILD_DIR], cacheKey)
+  if (!cacheHit) {
+    // Create build directory
+    await mkdirP(BUILD_DIR)
 
-  await exec('cmake', [`-B ${BUILD_DIR}`, ...buildArgs])
-  await exec('make', [`-j${nproc()}`, `-C ${BUILD_DIR}`])
+    await exec('cmake', [`-B ${BUILD_DIR}`, ...buildArgs])
+    await exec('make', [`-j${nproc()}`, `-C ${BUILD_DIR}`])
+  }
   await exec(`sudo make -j${nproc()} -C ${BUILD_DIR} install`)
+
+  await saveCache([BUILD_DIR], cacheKey)
   core.endGroup()
 
   core.startGroup('Cleanup')
