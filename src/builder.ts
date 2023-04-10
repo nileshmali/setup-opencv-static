@@ -99,7 +99,7 @@ export async function buildAndInstallOpenCV(paths: OpencvPaths): Promise<void> {
     '-D WITH_V4L=ON',
     '-D WITH_VA=ON',
     '-D WITH_VA_INTEL=ON',
-    '-D WITH_VTK=ON',
+    '-D WITH_VTK=OFF',
     '-D WITH_WEBP=ON',
     '-D WITH_XIMEA=OFF',
     '-D WITH_XINE=OFF',

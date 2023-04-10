@@ -130,7 +130,7 @@ async function buildAndInstallOpenCV(paths) {
         '-D WITH_V4L=ON',
         '-D WITH_VA=ON',
         '-D WITH_VA_INTEL=ON',
-        '-D WITH_VTK=ON',
+        '-D WITH_VTK=OFF',
         '-D WITH_WEBP=ON',
         '-D WITH_XIMEA=OFF',
         '-D WITH_XINE=OFF',
@@ -277,7 +277,7 @@ async function installDeps() {
     core.startGroup('Install prerequisites');
     if (sys.isLinux()) {
         await (0, exec_1.exec)('sudo apt-get update');
-        await (0, exec_1.exec)('sudo apt-get install -y clang build-essential cmake python2');
+        await (0, exec_1.exec)('sudo apt-get install -y clang build-essential cmake nasm');
     }
     else {
         throw new Error(`Unsupported platform '${sys.platform()}'`);
