@@ -11,7 +11,7 @@ inputs:
     description: "GitHub token to be used for downloading releases."
     required: true
   with-sccache:
-    description: "If sccache should be used for caching compilation results."
+    description: "If sccache should be used for caching compilation results, works only if sccache action is added."
     default: "false"
 runs:
   using: "node16"

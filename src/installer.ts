@@ -6,7 +6,7 @@ export async function installDeps(): Promise<void> {
   core.startGroup('Install prerequisites')
   if (sys.isLinux()) {
     await exec('sudo apt-get update')
-    await exec('sudo apt-get install -y clang build-essential cmake')
+    await exec('sudo apt-get install -y clang build-essential cmake python2')
   } else {
     throw new Error(`Unsupported platform '${sys.platform()}'`)
   }
