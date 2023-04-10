@@ -130,7 +130,7 @@ export async function buildAndInstallOpenCV(version: string): Promise<void> {
     await mkdirP(BUILD_DIR)
 
     await exec('cmake', [`-B ${BUILD_DIR}`, ...buildArgs])
-    await exec('make', [`-j${nproc()}`, `-C ${BUILD_DIR}`])
+    await exec(`make -j${nproc()} -C ${BUILD_DIR}`)
   }
   await exec(`sudo make -j${nproc()} -C ${BUILD_DIR} install`)
 

@@ -157,7 +157,7 @@ async function buildAndInstallOpenCV(version) {
         // Create build directory
         await (0, io_1.mkdirP)(BUILD_DIR);
         await (0, exec_1.exec)('cmake', [`-B ${BUILD_DIR}`, ...buildArgs]);
-        await (0, exec_1.exec)('make', [`-j${(0, system_1.nproc)()}`, `-C ${BUILD_DIR}`]);
+        await (0, exec_1.exec)(`make -j${(0, system_1.nproc)()} -C ${BUILD_DIR}`);
     }
     await (0, exec_1.exec)(`sudo make -j${(0, system_1.nproc)()} -C ${BUILD_DIR} install`);
     await (0, cache_1.saveCache)([BUILD_DIR], cacheKey);
