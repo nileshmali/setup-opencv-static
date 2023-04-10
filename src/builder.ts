@@ -1,13 +1,12 @@
 import * as core from '@actions/core'
-import {OpencvPaths} from './downloader'
 import {exec} from '@actions/exec'
-import {mkdirP, rmRF} from '@actions/io'
+import {mkdirP} from '@actions/io'
 import {saveCache, restoreCache} from '@actions/cache'
 import {nproc, platform} from './system'
 
 const BUILD_DIR = '/opt/opencv/build'
 
-export async function buildAndInstallOpenCV(paths: OpencvPaths): Promise<void> {
+export async function buildAndInstallOpenCV(version: string): Promise<void> {
   core.startGroup('Build and install OpenCV')
   core.info(`Build directory: ${BUILD_DIR}`)
   const buildArgs = [
@@ -114,8 +113,8 @@ export async function buildAndInstallOpenCV(paths: OpencvPaths): Promise<void> {
     '-D WITH_FREETYPE=OFF'
   ]
 
-  if ((paths.opencvContrib ?? '').length > 0) {
-    buildArgs.push(`-D OPENCV_EXTRA_MODULES_PATH=${paths.opencvContrib}/modules`)
+  if (core.getBooleanInput('opencv-contrib')) {
+    buildArgs.push(`-D OPENCV_EXTRA_MODULES_PATH=/opt/opencv_contrib/modules`)
   }
 
   if (core.getBooleanInput('with-sccache')) {
@@ -123,10 +122,10 @@ export async function buildAndInstallOpenCV(paths: OpencvPaths): Promise<void> {
     buildArgs.push('-D CMAKE_CXX_COMPILER_LAUNCHER=sccache')
   }
 
-  buildArgs.push(paths.opencv)
-  const cacheKey = `opencv-${paths.version}-${platform()}-${process.arch}`
+  buildArgs.push('/opt/opencv')
+  const cacheKey = `opencv-build-${version}-${platform()}-${process.arch}`
   const cacheHit = await restoreCache([BUILD_DIR], cacheKey)
-  if (!cacheHit) {
+  if (cacheHit == null) {
     // Create build directory
     await mkdirP(BUILD_DIR)
 
@@ -136,12 +135,5 @@ export async function buildAndInstallOpenCV(paths: OpencvPaths): Promise<void> {
   await exec(`sudo make -j${nproc()} -C ${BUILD_DIR} install`)
 
   await saveCache([BUILD_DIR], cacheKey)
-  core.endGroup()
-
-  core.startGroup('Cleanup')
-  await rmRF(paths.opencv)
-  if ((paths.opencvContrib ?? '').length > 0) {
-    await rmRF(paths.opencvContrib ?? '')
-  }
   core.endGroup()
 }

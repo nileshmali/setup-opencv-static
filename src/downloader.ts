@@ -1,18 +1,14 @@
+import {restoreCache, saveCache} from '@actions/cache'
 import * as core from '@actions/core'
 import {getOctokit} from '@actions/github'
-import {cacheDir, downloadTool, extractTar, find} from '@actions/tool-cache'
+import {downloadTool, extractTar} from '@actions/tool-cache'
 import {format} from 'util'
+import {platform} from './system'
 
 const GZIP_OPENCV_URL = 'https://github.com/opencv/opencv/archive/refs/tags/%s.tar.gz'
 const GZIP_CONTRIB_URL = 'https://github.com/opencv/opencv_contrib/archive/refs/tags/%s.tar.gz'
 
-export interface OpencvPaths {
-  version: string
-  opencv: string
-  opencvContrib?: string
-}
-
-export async function downloadOpenCV(): Promise<OpencvPaths> {
+export async function downloadOpenCV(): Promise<string> {
   core.startGroup('Download OpenCV')
   let opencvVersion = core.getInput('opencv-version')
   if (opencvVersion.length === 0) {
@@ -23,37 +19,24 @@ export async function downloadOpenCV(): Promise<OpencvPaths> {
     })
     opencvVersion = release.data.tag_name
   }
+  const dirs = ['/opt/opencv', '/opt/opencv_contrib']
   core.info(`try to setup OpenCV version: ${opencvVersion}`)
-  let cachedOpencvPath = find('opencv', opencvVersion)
-  if (cachedOpencvPath.length === 0) {
+  const opencvCacheKey = `opencv-${opencvVersion}-${platform()}-${process.arch}`
+  const cacheId = await restoreCache(dirs, opencvCacheKey)
+  if (cacheId == null) {
+    core.info(`cache not found for key: ${opencvCacheKey}`)
     const opencvDownloadPath = await downloadTool(format(GZIP_OPENCV_URL, opencvVersion))
-    const opencvPath = await extractTar(opencvDownloadPath)
+    const opencvPath = await extractTar(opencvDownloadPath, '/opt/opencv')
     core.info(`OpenCV extracted to ${opencvPath}`)
-    // Cache opencv
-    cachedOpencvPath = await cacheDir(opencvPath, 'opencv', opencvVersion)
-  }
-  core.addPath(cachedOpencvPath)
-  core.info(`OpenCV cached to ${cachedOpencvPath}`)
-
-  const opencvContrib = core.getBooleanInput('opencv-contrib')
-  let cachedOpencvContribPath
-  if (opencvContrib) {
-    core.info(`try to setup OpenCV contrib version: ${opencvVersion}`)
-    cachedOpencvContribPath = find('opencv-contrib', opencvVersion)
-    if (cachedOpencvContribPath.length === 0) {
+    const opencvContrib = core.getBooleanInput('opencv-contrib')
+    if (opencvContrib) {
+      core.info(`try to setup OpenCV contrib version: ${opencvVersion}`)
       const opencvContribDownloadPath = await downloadTool(format(GZIP_CONTRIB_URL, opencvVersion))
-      const opencvContribPath = await extractTar(opencvContribDownloadPath)
+      const opencvContribPath = await extractTar(opencvContribDownloadPath, '/opt/opencv_contrib')
       core.info(`OpenCV contrib extracted to ${opencvContribPath}`)
-      // Cache opencv contrib
-      cachedOpencvContribPath = await cacheDir(opencvContribPath, 'opencv-contrib', opencvVersion)
     }
-    core.addPath(cachedOpencvContribPath)
-    core.info(`OpenCV contrib cached to ${cachedOpencvContribPath}`)
+    await saveCache(dirs, opencvCacheKey)
   }
   core.endGroup()
-  return {
-    version: opencvVersion,
-    opencv: `${cachedOpencvPath}/opencv-${opencvVersion}`,
-    opencvContrib: `${cachedOpencvContribPath}/opencv_contrib-${opencvVersion}`
-  }
+  return opencvVersion
 }
