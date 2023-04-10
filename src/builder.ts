@@ -1,7 +1,9 @@
+import * as core from '@actions/core'
 import {OpencvPaths} from './downloader'
 import {exec} from '@actions/exec'
 
 export async function buildAndInstallOpenCV(paths: OpencvPaths): Promise<void> {
+  core.startGroup('Build and install OpenCV')
   const buildArgs = [
     '-D BUILD_CUDA_STUBS=OFF',
     '-D BUILD_DOCS=OFF',
@@ -105,7 +107,6 @@ export async function buildAndInstallOpenCV(paths: OpencvPaths): Promise<void> {
     '-D WITH_FREETYPE=OFF'
   ]
 
-  buildArgs.push('-D CMAKE_INSTALL_PREFIX=')
   if ((paths.opencvContrib ?? '').length > 0) {
     buildArgs.push(`-D OPENCV_EXTRA_MODULES_PATH=${paths.opencvContrib}/modules`)
   }
@@ -113,4 +114,5 @@ export async function buildAndInstallOpenCV(paths: OpencvPaths): Promise<void> {
   await exec('cmake', [...buildArgs])
   await exec('make', [`-j"$(nproc)"`])
   await exec(`sudo make -j"$(nproc)" install`)
+  core.endGroup()
 }
