@@ -114,7 +114,7 @@ export async function buildAndInstallOpenCV(version: string): Promise<void> {
   ]
 
   if (core.getBooleanInput('opencv-contrib')) {
-    buildArgs.push(`-D OPENCV_EXTRA_MODULES_PATH=/opt/opencv_contrib/modules`)
+    buildArgs.push(`-D OPENCV_EXTRA_MODULES_PATH=/opt/opencv_contrib/opencv_contrib-${version}/modules`)
   }
 
   if (core.getBooleanInput('with-sccache')) {
@@ -122,7 +122,7 @@ export async function buildAndInstallOpenCV(version: string): Promise<void> {
     buildArgs.push('-D CMAKE_CXX_COMPILER_LAUNCHER=sccache')
   }
 
-  buildArgs.push('/opt/opencv')
+  buildArgs.push(`/opt/opencv/opencv-${version}`)
   const cacheKey = `opencv-build-${version}-${platform()}-${process.arch}`
   const cacheHit = await restoreCache([BUILD_DIR], cacheKey)
   if (cacheHit == null) {

@@ -144,13 +144,13 @@ async function buildAndInstallOpenCV(version) {
         '-D WITH_FREETYPE=OFF'
     ];
     if (core.getBooleanInput('opencv-contrib')) {
-        buildArgs.push(`-D OPENCV_EXTRA_MODULES_PATH=/opt/opencv_contrib/modules`);
+        buildArgs.push(`-D OPENCV_EXTRA_MODULES_PATH=/opt/opencv_contrib/opencv_contrib-${version}/modules`);
     }
     if (core.getBooleanInput('with-sccache')) {
         buildArgs.push('-D CMAKE_C_COMPILER_LAUNCHER=sccache');
         buildArgs.push('-D CMAKE_CXX_COMPILER_LAUNCHER=sccache');
     }
-    buildArgs.push('/opt/opencv');
+    buildArgs.push(`/opt/opencv/opencv-${version}`);
     const cacheKey = `opencv-build-${version}-${(0, system_1.platform)()}-${process.arch}`;
     const cacheHit = await (0, cache_1.restoreCache)([BUILD_DIR], cacheKey);
     if (cacheHit == null) {
