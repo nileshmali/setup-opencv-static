@@ -34,7 +34,7 @@ export async function downloadOpenCV(): Promise<OpencvPaths> {
   const opencvContrib = core.getBooleanInput('opencv-contrib')
   let cachedOpencvContribPath
   if (opencvContrib) {
-    core.info('try to setup OpenCV contrib version: ${opencvVersion}')
+    core.info(`try to setup OpenCV contrib version: ${opencvVersion}`)
     const opencvContribDownloadPath = await downloadTool(format(GZIP_CONTRIB_URL, opencvVersion))
     const opencvContribPath = await extractTar(opencvContribDownloadPath)
     core.info(`OpenCV contrib extracted to ${opencvContribPath}`)
@@ -45,7 +45,7 @@ export async function downloadOpenCV(): Promise<OpencvPaths> {
   }
   core.endGroup()
   return {
-    opencv: cachedOpencvPath,
-    opencvContrib: cachedOpencvContribPath
+    opencv: `${cachedOpencvPath}/opencv-${opencvVersion}`,
+    opencvContrib: `${cachedOpencvContribPath}/opencv_contrib-${opencvVersion}`
   }
 }

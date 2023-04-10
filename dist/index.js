@@ -184,7 +184,7 @@ async function downloadOpenCV() {
     const opencvContrib = core.getBooleanInput('opencv-contrib');
     let cachedOpencvContribPath;
     if (opencvContrib) {
-        core.info('try to setup OpenCV contrib version: ${opencvVersion}');
+        core.info(`try to setup OpenCV contrib version: ${opencvVersion}`);
         const opencvContribDownloadPath = await (0, tool_cache_1.downloadTool)((0, util_1.format)(GZIP_CONTRIB_URL, opencvVersion));
         const opencvContribPath = await (0, tool_cache_1.extractTar)(opencvContribDownloadPath);
         core.info(`OpenCV contrib extracted to ${opencvContribPath}`);
@@ -195,8 +195,8 @@ async function downloadOpenCV() {
     }
     core.endGroup();
     return {
-        opencv: cachedOpencvPath,
-        opencvContrib: cachedOpencvContribPath
+        opencv: `${cachedOpencvPath}/opencv-${opencvVersion}`,
+        opencvContrib: `${cachedOpencvContribPath}/opencv_contrib-${opencvVersion}`
     };
 }
 exports.downloadOpenCV = downloadOpenCV;
