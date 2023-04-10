@@ -33,9 +33,12 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.buildAndInstallOpenCV = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const exec_1 = __nccwpck_require__(1514);
+const io_1 = __nccwpck_require__(7436);
 const system_1 = __nccwpck_require__(5785);
+const BUILD_DIR = '/opt/opencv/build';
 async function buildAndInstallOpenCV(paths) {
     core.startGroup('Build and install OpenCV');
+    core.info(`Build directory: ${BUILD_DIR}`);
     const buildArgs = [
         '-D BUILD_CUDA_STUBS=OFF',
         '-D BUILD_DOCS=OFF',
@@ -72,11 +75,12 @@ async function buildAndInstallOpenCV(paths) {
         '-D INSTALL_CREATE_DISTRIB=OFF',
         '-D INSTALL_C_EXAMPLES=OFF',
         '-D INSTALL_PYTHON_EXAMPLES=OFF',
+        '-D BUILD_NEW_PYTHON_SUPPORT=OFF',
         '-D INSTALL_TESTS=OFF',
         '-D OPENCV_ENABLE_MEMALIGN=OFF',
         '-D OPENCV_ENABLE_NONFREE=ON',
         '-D OPENCV_FORCE_3RDPARTY_BUILD=OFF',
-        '-D OPENCV_GENERATE_PKGCONFIG=OFF',
+        '-D OPENCV_GENERATE_PKGCONFIG=ON',
         '-D PROTOBUF_UPDATE_FILES=OFF',
         '-D WITH_1394=OFF',
         '-D WITH_ADE=ON',
@@ -146,9 +150,17 @@ async function buildAndInstallOpenCV(paths) {
         buildArgs.push('-D CMAKE_CXX_COMPILER_LAUNCHER=sccache');
     }
     buildArgs.push(paths.opencv);
-    await (0, exec_1.exec)('cmake', [...buildArgs]);
-    await (0, exec_1.exec)('make', [`-j${(0, system_1.nproc)()}`]);
-    await (0, exec_1.exec)(`sudo make -j${(0, system_1.nproc)()} install`);
+    // Create build directory
+    await (0, io_1.mkdirP)(BUILD_DIR);
+    await (0, exec_1.exec)('cmake', [`-B ${BUILD_DIR}`, ...buildArgs]);
+    await (0, exec_1.exec)('make', [`-j${(0, system_1.nproc)()}`, `-C ${BUILD_DIR}`]);
+    await (0, exec_1.exec)(`sudo make -j${(0, system_1.nproc)()} -C ${BUILD_DIR} install`);
+    core.endGroup();
+    core.startGroup('Cleanup');
+    await (0, io_1.rmRF)(paths.opencv);
+    if ((paths.opencvContrib ?? '').length > 0) {
+        await (0, io_1.rmRF)(paths.opencvContrib ?? '');
+    }
     core.endGroup();
 }
 exports.buildAndInstallOpenCV = buildAndInstallOpenCV;

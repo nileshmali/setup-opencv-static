@@ -1,10 +1,14 @@
 import * as core from '@actions/core'
 import {OpencvPaths} from './downloader'
 import {exec} from '@actions/exec'
+import {mkdirP, rmRF} from '@actions/io'
 import {nproc} from './system'
+
+const BUILD_DIR = '/opt/opencv/build'
 
 export async function buildAndInstallOpenCV(paths: OpencvPaths): Promise<void> {
   core.startGroup('Build and install OpenCV')
+  core.info(`Build directory: ${BUILD_DIR}`)
   const buildArgs = [
     '-D BUILD_CUDA_STUBS=OFF',
     '-D BUILD_DOCS=OFF',
@@ -41,11 +45,12 @@ export async function buildAndInstallOpenCV(paths: OpencvPaths): Promise<void> {
     '-D INSTALL_CREATE_DISTRIB=OFF',
     '-D INSTALL_C_EXAMPLES=OFF',
     '-D INSTALL_PYTHON_EXAMPLES=OFF',
+    '-D BUILD_NEW_PYTHON_SUPPORT=OFF',
     '-D INSTALL_TESTS=OFF',
     '-D OPENCV_ENABLE_MEMALIGN=OFF',
     '-D OPENCV_ENABLE_NONFREE=ON',
     '-D OPENCV_FORCE_3RDPARTY_BUILD=OFF',
-    '-D OPENCV_GENERATE_PKGCONFIG=OFF',
+    '-D OPENCV_GENERATE_PKGCONFIG=ON',
     '-D PROTOBUF_UPDATE_FILES=OFF',
     '-D WITH_1394=OFF',
     '-D WITH_ADE=ON',
@@ -118,8 +123,18 @@ export async function buildAndInstallOpenCV(paths: OpencvPaths): Promise<void> {
   }
 
   buildArgs.push(paths.opencv)
-  await exec('cmake', [...buildArgs])
-  await exec('make', [`-j${nproc()}`])
-  await exec(`sudo make -j${nproc()} install`)
+  // Create build directory
+  await mkdirP(BUILD_DIR)
+
+  await exec('cmake', [`-B ${BUILD_DIR}`, ...buildArgs])
+  await exec('make', [`-j${nproc()}`, `-C ${BUILD_DIR}`])
+  await exec(`sudo make -j${nproc()} -C ${BUILD_DIR} install`)
+  core.endGroup()
+
+  core.startGroup('Cleanup')
+  await rmRF(paths.opencv)
+  if ((paths.opencvContrib ?? '').length > 0) {
+    await rmRF(paths.opencvContrib ?? '')
+  }
   core.endGroup()
 }
