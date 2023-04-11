@@ -47,7 +47,7 @@ export async function buildAndInstallOpenCV(version: string): Promise<void> {
     '-D OPENCV_ENABLE_MEMALIGN=OFF',
     '-D OPENCV_ENABLE_NONFREE=ON',
     '-D OPENCV_FORCE_3RDPARTY_BUILD=OFF',
-    '-D OPENCV_GENERATE_PKGCONFIG=ON',
+    '-D OPENCV_GENERATE_PKGCONFIG=OFF',
     '-D PROTOBUF_UPDATE_FILES=OFF',
     '-D WITH_1394=OFF',
     '-D WITH_ADE=ON',
@@ -144,6 +144,5 @@ export async function buildAndInstallOpenCV(version: string): Promise<void> {
     'OPENCV_LINK_LIBS',
     'opencv_highgui,opencv_objdetect,opencv_dnn,opencv_calib3d,opencv_features2d,opencv_stitching,opencv_flann,opencv_videoio,opencv_video,opencv_ml,opencv_imgcodecs,opencv_imgproc,opencv_core,libittnotify,libtbb,liblibwebp,liblibtiff,liblibjpeg-turbo,liblibpng,liblibopenjp2,libippiw,libippicv,liblibprotobuf,libquirc,libzlib'
   )
-  await exec(`sudo ldconfig`)
   core.endGroup()
 }
