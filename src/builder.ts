@@ -1,14 +1,13 @@
 import * as core from '@actions/core'
 import {exec} from '@actions/exec'
 import {mkdirP} from '@actions/io'
-import {saveCache, restoreCache} from '@actions/cache'
+import {restoreCache, saveCache} from '@actions/cache'
 import {nproc, platform} from './system'
-
-const BUILD_DIR = '/opt/opencv/build'
+import {BuildDir, CacheHit, CachePrimaryKey} from './constants'
 
 export async function buildAndInstallOpenCV(version: string): Promise<void> {
   core.startGroup('Build and install OpenCV')
-  core.info(`Build directory: ${BUILD_DIR}`)
+  core.info(`Build directory: ${BuildDir}`)
   const buildArgs = [
     '-D BUILD_CUDA_STUBS=OFF',
     '-D BUILD_DOCS=OFF',
@@ -118,28 +117,36 @@ export async function buildAndInstallOpenCV(version: string): Promise<void> {
   }
 
   if (core.getBooleanInput('with-sccache')) {
+    core.info('Using sccache')
     buildArgs.push('-D CMAKE_C_COMPILER_LAUNCHER=sccache')
     buildArgs.push('-D CMAKE_CXX_COMPILER_LAUNCHER=sccache')
   }
 
   buildArgs.push(`/opt/opencv/opencv-${version}`)
   const cacheKey = `opencv-build-${version}-${platform()}-${process.arch}`
-  const cacheId = await restoreCache([BUILD_DIR], cacheKey)
-  core.info(`build cache id: ${cacheId}`)
-  if (cacheId == null) {
+  core.saveState(CachePrimaryKey, cacheKey)
+  const cacheHit = Boolean(await restoreCache([BuildDir], cacheKey))
+  core.setOutput(CacheHit, cacheHit)
+  if (!cacheHit) {
+    core.startGroup('Compile OpenCV')
     // Create build directory
-    await mkdirP(BUILD_DIR)
-
-    await exec('cmake', [`-B ${BUILD_DIR}`, ...buildArgs])
-    await exec(`make -j${nproc()} -C ${BUILD_DIR}`)
-    await saveCache([BUILD_DIR], cacheKey)
+    await mkdirP(BuildDir)
+    await exec('cmake', [`-B ${BuildDir}`, ...buildArgs])
+    await exec(`make -j${nproc()} -C ${BuildDir}`)
+    const cacheId = await saveCache([BuildDir], cacheKey)
+    if (cacheId !== -1) {
+      core.info(`Cache saved with the key: ${cacheKey}`)
+    }
+    core.endGroup()
   }
-  await exec(`sudo make -j${nproc()} -C ${BUILD_DIR} install`)
+  core.startGroup('Install OpenCV')
+  await exec(`sudo make -j${nproc()} -C ${BuildDir} install`)
 
   core.exportVariable(
     'OPENCV_LINK_LIBS',
     'opencv_highgui,opencv_objdetect,opencv_dnn,opencv_calib3d,opencv_features2d,opencv_stitching,opencv_flann,opencv_videoio,opencv_video,opencv_ml,opencv_imgcodecs,opencv_imgproc,opencv_core,libittnotify,libtbb,liblibwebp,liblibtiff,liblibjpeg-turbo,liblibpng,liblibopenjp2,libippiw,libippicv,liblibprotobuf,libquirc,libzlib'
   )
   await exec(`sudo ldconfig`)
+  core.endGroup()
   core.endGroup()
 }

@@ -6,13 +6,13 @@ inputs:
     description: "OpenCV version to be installed."
   opencv-contrib:
     description: "If opencv-contrib (extra modules) should be included in the installation."
-    default: "true"
+    default: true
   github-token:
     description: "GitHub token to be used for downloading releases."
     required: true
   with-sccache:
     description: "If sccache should be used for caching compilation results, works only if sccache action is added."
-    default: "false"
+    default: false
 runs:
   using: "node16"
   main: "dist/index.js"

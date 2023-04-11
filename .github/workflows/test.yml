@@ -27,4 +27,4 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           with-sccache: 'true'
-          opencv-contrib: 'false'
+          opencv-contrib: false
