@@ -19,7 +19,7 @@ export async function downloadOpenCV(): Promise<string> {
     })
     opencvVersion = release.data.tag_name
   }
-  const dirs = ['/opt/opencv', '/opt/opencv_contrib']
+  const dirs = ['/opt/opencv/', '/opt/opencv_contrib/']
   core.info(`try to setup OpenCV version: ${opencvVersion}`)
   const opencvCacheKey = `opencv-${opencvVersion}-${platform()}-${process.arch}`
   const cacheId = await restoreCache(dirs, opencvCacheKey)
