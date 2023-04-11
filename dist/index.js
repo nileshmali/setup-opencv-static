@@ -162,8 +162,8 @@ async function buildAndInstallOpenCV(version) {
         await (0, cache_1.saveCache)([BUILD_DIR], cacheKey);
     }
     await (0, exec_1.exec)(`sudo make -j${(0, system_1.nproc)()} -C ${BUILD_DIR} install`);
-    await (0, exec_1.exec)(`sudo ldconfig`);
     core.exportVariable('OPENCV_LINK_LIBS', 'opencv_highgui,opencv_objdetect,opencv_dnn,opencv_calib3d,opencv_features2d,opencv_stitching,opencv_flann,opencv_videoio,opencv_video,opencv_ml,opencv_imgcodecs,opencv_imgproc,opencv_core,libittnotify,libtbb,liblibwebp,liblibtiff,liblibjpeg-turbo,liblibpng,liblibopenjp2,libippiw,libippicv,liblibprotobuf,libquirc,libzlib');
+    await (0, exec_1.exec)(`sudo ldconfig`);
     core.endGroup();
 }
 exports.buildAndInstallOpenCV = buildAndInstallOpenCV;
