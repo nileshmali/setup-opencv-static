@@ -33,6 +33,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.buildAndInstallOpenCV = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const exec_1 = __nccwpck_require__(1514);
+const crypto = __importStar(__nccwpck_require__(6113));
 const io_1 = __nccwpck_require__(7436);
 const cache_1 = __nccwpck_require__(7799);
 const system_1 = __nccwpck_require__(5785);
@@ -150,7 +151,8 @@ async function buildAndInstallOpenCV(version) {
         buildArgs.push('-D CMAKE_CXX_COMPILER_LAUNCHER=sccache');
     }
     buildArgs.push(`/opt/opencv/opencv-${version}`);
-    const cacheKey = `opencv-build-${version}-${(0, system_1.platform)()}-${process.arch}`;
+    const hash = computeHash(buildArgs);
+    const cacheKey = `opencv-build-${version}-${(0, system_1.platform)()}-${process.arch}-${hash}`;
     core.saveState(constants_1.CachePrimaryKey, cacheKey);
     const cacheHit = Boolean(await (0, cache_1.restoreCache)([constants_1.BuildDir], cacheKey));
     core.setOutput(constants_1.CacheHit, cacheHit);
@@ -172,6 +174,13 @@ async function buildAndInstallOpenCV(version) {
     core.endGroup();
 }
 exports.buildAndInstallOpenCV = buildAndInstallOpenCV;
+function computeHash(strings) {
+    const hash = crypto.createHash('sha256');
+    for (const str of strings) {
+        hash.update(str);
+    }
+    return hash.digest('hex');
+}
 
 
 /***/ }),

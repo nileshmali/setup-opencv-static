@@ -1,5 +1,6 @@
 import * as core from '@actions/core'
 import {exec} from '@actions/exec'
+import * as crypto from 'crypto'
 import {mkdirP} from '@actions/io'
 import {restoreCache, saveCache} from '@actions/cache'
 import {nproc, platform} from './system'
@@ -121,7 +122,8 @@ export async function buildAndInstallOpenCV(version: string): Promise<void> {
   }
 
   buildArgs.push(`/opt/opencv/opencv-${version}`)
-  const cacheKey = `opencv-build-${version}-${platform()}-${process.arch}`
+  const hash = computeHash(buildArgs)
+  const cacheKey = `opencv-build-${version}-${platform()}-${process.arch}-${hash}`
   core.saveState(CachePrimaryKey, cacheKey)
   const cacheHit = Boolean(await restoreCache([BuildDir], cacheKey))
   core.setOutput(CacheHit, cacheHit)
@@ -145,4 +147,12 @@ export async function buildAndInstallOpenCV(version: string): Promise<void> {
     'opencv_highgui,opencv_objdetect,opencv_dnn,opencv_calib3d,opencv_features2d,opencv_stitching,opencv_flann,opencv_videoio,opencv_video,opencv_ml,opencv_imgcodecs,opencv_imgproc,opencv_core,libittnotify,libtbb,liblibwebp,liblibtiff,liblibjpeg-turbo,liblibpng,liblibopenjp2,libippiw,libippicv,liblibprotobuf,libquirc,libzlib'
   )
   core.endGroup()
+}
+
+function computeHash(strings: string[]): string {
+  const hash = crypto.createHash('sha256')
+  for (const str of strings) {
+    hash.update(str)
+  }
+  return hash.digest('hex')
 }
