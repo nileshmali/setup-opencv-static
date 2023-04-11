@@ -110,7 +110,8 @@ export async function buildAndInstallOpenCV(version: string): Promise<void> {
     '-D WITH_XINE=OFF',
     '-D BUILD_opencv_freetype=OFF',
     '-D OPENCV_FORCE_3RDPARTY_BUILD=ON',
-    '-D WITH_FREETYPE=OFF'
+    '-D WITH_FREETYPE=OFF',
+    '-D CMAKE_INSTALL_PREFIX=/usr'
   ]
 
   if (core.getInput('opencv-contrib') === 'true') {

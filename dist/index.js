@@ -141,7 +141,8 @@ async function buildAndInstallOpenCV(version) {
         '-D WITH_XINE=OFF',
         '-D BUILD_opencv_freetype=OFF',
         '-D OPENCV_FORCE_3RDPARTY_BUILD=ON',
-        '-D WITH_FREETYPE=OFF'
+        '-D WITH_FREETYPE=OFF',
+        '-D CMAKE_INSTALL_PREFIX=/usr'
     ];
     if (core.getInput('opencv-contrib') === 'true') {
         buildArgs.push(`-D OPENCV_EXTRA_MODULES_PATH=/opt/opencv_contrib/opencv_contrib-${version}/modules`);
@@ -152,15 +153,18 @@ async function buildAndInstallOpenCV(version) {
     }
     buildArgs.push(`/opt/opencv/opencv-${version}`);
     const cacheKey = `opencv-build-${version}-${(0, system_1.platform)()}-${process.arch}`;
-    const cacheHit = await (0, cache_1.restoreCache)([BUILD_DIR], cacheKey);
-    if (cacheHit == null) {
+    const cacheId = await (0, cache_1.restoreCache)([BUILD_DIR], cacheKey);
+    core.info(`build cache id: ${cacheId}`);
+    if (cacheId == null) {
         // Create build directory
         await (0, io_1.mkdirP)(BUILD_DIR);
         await (0, exec_1.exec)('cmake', [`-B ${BUILD_DIR}`, ...buildArgs]);
         await (0, exec_1.exec)(`make -j${(0, system_1.nproc)()} -C ${BUILD_DIR}`);
+        await (0, cache_1.saveCache)([BUILD_DIR], cacheKey);
     }
     await (0, exec_1.exec)(`sudo make -j${(0, system_1.nproc)()} -C ${BUILD_DIR} install`);
-    await (0, cache_1.saveCache)([BUILD_DIR], cacheKey);
+    core.exportVariable('OPENCV_LINK_LIBS', 'opencv_highgui,opencv_objdetect,opencv_dnn,opencv_videostab,opencv_calib3d,opencv_features2d,opencv_stitching,opencv_flann,opencv_videoio,opencv_rgbd,opencv_aruco,opencv_video,opencv_ml,opencv_imgcodecs,opencv_imgproc,opencv_core,ittnotify,tbb,liblibwebp,liblibtiff,liblibjpeg-turbo,liblibpng,liblibopenjp2,ippiw,ippicv,liblibprotobuf,quirc,zlib');
+    await (0, exec_1.exec)(`sudo ldconfig`);
     core.endGroup();
 }
 exports.buildAndInstallOpenCV = buildAndInstallOpenCV;
@@ -221,6 +225,7 @@ async function downloadOpenCV() {
     core.info(`try to setup OpenCV version: ${opencvVersion}`);
     const opencvCacheKey = `opencv-${opencvVersion}-${(0, system_1.platform)()}-${process.arch}`;
     const cacheId = await (0, cache_1.restoreCache)(dirs, opencvCacheKey);
+    core.info(`source download cache id: ${cacheId}`);
     if (cacheId == null) {
         core.info(`cache not found for key: ${opencvCacheKey}`);
         const opencvDownloadPath = await (0, tool_cache_1.downloadTool)((0, util_1.format)(GZIP_OPENCV_URL, opencvVersion));
