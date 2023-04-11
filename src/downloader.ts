@@ -23,6 +23,7 @@ export async function downloadOpenCV(): Promise<string> {
   core.info(`try to setup OpenCV version: ${opencvVersion}`)
   const opencvCacheKey = `opencv-${opencvVersion}-${platform()}-${process.arch}`
   const cacheId = await restoreCache(dirs, opencvCacheKey)
+  core.info(`source download cache id: ${cacheId}`)
   if (cacheId == null) {
     core.info(`cache not found for key: ${opencvCacheKey}`)
     const opencvDownloadPath = await downloadTool(format(GZIP_OPENCV_URL, opencvVersion))

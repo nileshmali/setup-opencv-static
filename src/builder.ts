@@ -124,16 +124,17 @@ export async function buildAndInstallOpenCV(version: string): Promise<void> {
 
   buildArgs.push(`/opt/opencv/opencv-${version}`)
   const cacheKey = `opencv-build-${version}-${platform()}-${process.arch}`
-  const cacheHit = await restoreCache([BUILD_DIR], cacheKey)
-  if (cacheHit == null) {
+  const cacheId = await restoreCache([BUILD_DIR], cacheKey)
+  core.info(`build cache id: ${cacheId}`)
+  if (cacheId == null) {
     // Create build directory
     await mkdirP(BUILD_DIR)
 
     await exec('cmake', [`-B ${BUILD_DIR}`, ...buildArgs])
     await exec(`make -j${nproc()} -C ${BUILD_DIR}`)
+    await saveCache([BUILD_DIR], cacheKey)
   }
   await exec(`sudo make -j${nproc()} -C ${BUILD_DIR} install`)
-
-  await saveCache([BUILD_DIR], cacheKey)
+  await exec(`sudo ldconfig`)
   core.endGroup()
 }
