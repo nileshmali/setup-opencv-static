@@ -141,8 +141,7 @@ async function buildAndInstallOpenCV(version) {
         '-D WITH_XINE=OFF',
         '-D BUILD_opencv_freetype=OFF',
         '-D OPENCV_FORCE_3RDPARTY_BUILD=ON',
-        '-D WITH_FREETYPE=OFF',
-        '-D CMAKE_INSTALL_PREFIX=/usr'
+        '-D WITH_FREETYPE=OFF'
     ];
     if (core.getInput('opencv-contrib') === 'true') {
         buildArgs.push(`-D OPENCV_EXTRA_MODULES_PATH=/opt/opencv_contrib/opencv_contrib-${version}/modules`);
@@ -163,9 +162,11 @@ async function buildAndInstallOpenCV(version) {
         await (0, cache_1.saveCache)([BUILD_DIR], cacheKey);
     }
     await (0, exec_1.exec)(`sudo make -j${(0, system_1.nproc)()} -C ${BUILD_DIR} install`);
-    core.exportVariable('OPENCV_LINK_LIBS', 'opencv_highgui,opencv_objdetect,opencv_dnn,opencv_videostab,opencv_calib3d,opencv_features2d,opencv_stitching,opencv_flann,opencv_videoio,opencv_rgbd,opencv_aruco,opencv_video,opencv_ml,opencv_imgcodecs,opencv_imgproc,opencv_core,ittnotify,tbb,libwebp,libtiff,libjpeg-turbo,libpng,libopenjp2,ippiw,ippicv,libprotobuf,quirc,zlib');
-    (0, exec_1.exec)(`env`);
     await (0, exec_1.exec)(`sudo ldconfig`);
+    core.exportVariable('OPENCV_LINK_LIBS', 'opencv_highgui,opencv_objdetect,opencv_dnn,opencv_videostab,opencv_calib3d,opencv_features2d,opencv_stitching,opencv_flann,opencv_videoio,opencv_rgbd,opencv_aruco,opencv_video,opencv_ml,opencv_imgcodecs,opencv_imgproc,opencv_core,ittnotify,tbb,libwebp,libtiff,libjpeg-turbo,libpng,libopenjp2,ippiw,ippicv,libprotobuf,quirc,zlib');
+    await (0, exec_1.exec)('sudo ls -l /usr/local/bin');
+    await (0, exec_1.exec)('sudo ls -l /usr/local/lib');
+    await (0, exec_1.exec)('sudo ls -l /usr/local/share/opencv4');
     core.endGroup();
 }
 exports.buildAndInstallOpenCV = buildAndInstallOpenCV;

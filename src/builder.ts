@@ -110,8 +110,7 @@ export async function buildAndInstallOpenCV(version: string): Promise<void> {
     '-D WITH_XINE=OFF',
     '-D BUILD_opencv_freetype=OFF',
     '-D OPENCV_FORCE_3RDPARTY_BUILD=ON',
-    '-D WITH_FREETYPE=OFF',
-    '-D CMAKE_INSTALL_PREFIX=/usr'
+    '-D WITH_FREETYPE=OFF'
   ]
 
   if (core.getInput('opencv-contrib') === 'true') {
@@ -136,11 +135,14 @@ export async function buildAndInstallOpenCV(version: string): Promise<void> {
     await saveCache([BUILD_DIR], cacheKey)
   }
   await exec(`sudo make -j${nproc()} -C ${BUILD_DIR} install`)
+  await exec(`sudo ldconfig`)
+
   core.exportVariable(
     'OPENCV_LINK_LIBS',
     'opencv_highgui,opencv_objdetect,opencv_dnn,opencv_videostab,opencv_calib3d,opencv_features2d,opencv_stitching,opencv_flann,opencv_videoio,opencv_rgbd,opencv_aruco,opencv_video,opencv_ml,opencv_imgcodecs,opencv_imgproc,opencv_core,ittnotify,tbb,libwebp,libtiff,libjpeg-turbo,libpng,libopenjp2,ippiw,ippicv,libprotobuf,quirc,zlib'
   )
-  exec(`env`)
-  await exec(`sudo ldconfig`)
+  await exec('sudo ls -l /usr/local/bin')
+  await exec('sudo ls -l /usr/local/lib')
+  await exec('sudo ls -l /usr/local/share/opencv4')
   core.endGroup()
 }
