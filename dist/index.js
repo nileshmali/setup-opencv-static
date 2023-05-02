@@ -305,7 +305,7 @@ async function installDeps() {
     core.startGroup('Install prerequisites');
     if (sys.isLinux()) {
         await (0, exec_1.exec)('sudo apt-get update');
-        await (0, exec_1.exec)('sudo apt-get install -y clang build-essential cmake nasm python-numpy');
+        await (0, exec_1.exec)('sudo apt-get install -y clang build-essential cmake nasm');
     }
     else {
         throw new Error(`Unsupported platform '${sys.platform()}'`);
