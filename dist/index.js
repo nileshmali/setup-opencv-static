@@ -8131,7 +8131,7 @@ const Constants = {
     /**
      * The core-http version
      */
-    coreHttpVersion: "3.0.0",
+    coreHttpVersion: "3.0.1",
     /**
      * Specifies HTTP.
      */
@@ -58186,14 +58186,14 @@ function wrappy (fn, cb) {
       this.saxParser.onopentag = (function(_this) {
         return function(node) {
           var key, newValue, obj, processedKey, ref;
-          obj = {};
+          obj = Object.create(null);
           obj[charkey] = "";
           if (!_this.options.ignoreAttrs) {
             ref = node.attributes;
             for (key in ref) {
               if (!hasProp.call(ref, key)) continue;
               if (!(attrkey in obj) && !_this.options.mergeAttrs) {
-                obj[attrkey] = {};
+                obj[attrkey] = Object.create(null);
               }
               newValue = _this.options.attrValueProcessors ? processItem(_this.options.attrValueProcessors, node.attributes[key], key) : node.attributes[key];
               processedKey = _this.options.attrNameProcessors ? processItem(_this.options.attrNameProcessors, key) : key;
@@ -58243,7 +58243,11 @@ function wrappy (fn, cb) {
             }
           }
           if (isEmpty(obj)) {
-            obj = _this.options.emptyTag !== '' ? _this.options.emptyTag : emptyStr;
+            if (typeof _this.options.emptyTag === 'function') {
+              obj = _this.options.emptyTag();
+            } else {
+              obj = _this.options.emptyTag !== '' ? _this.options.emptyTag : emptyStr;
+            }
           }
           if (_this.options.validator != null) {
             xpath = "/" + ((function() {
@@ -58267,7 +58271,7 @@ function wrappy (fn, cb) {
           }
           if (_this.options.explicitChildren && !_this.options.mergeAttrs && typeof obj === 'object') {
             if (!_this.options.preserveChildrenOrder) {
-              node = {};
+              node = Object.create(null);
               if (_this.options.attrkey in obj) {
                 node[_this.options.attrkey] = obj[_this.options.attrkey];
                 delete obj[_this.options.attrkey];
@@ -58282,7 +58286,7 @@ function wrappy (fn, cb) {
               obj = node;
             } else if (s) {
               s[_this.options.childkey] = s[_this.options.childkey] || [];
-              objClone = {};
+              objClone = Object.create(null);
               for (key in obj) {
                 if (!hasProp.call(obj, key)) continue;
                 objClone[key] = obj[key];
@@ -58299,7 +58303,7 @@ function wrappy (fn, cb) {
           } else {
             if (_this.options.explicitRoot) {
               old = obj;
-              obj = {};
+              obj = Object.create(null);
               obj[nodeName] = old;
             }
             _this.resultObject = obj;
