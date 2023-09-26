@@ -10,7 +10,7 @@ jobs:
   build: # make sure build/ci work properly
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - run: |
           npm install
       - run: |
@@ -20,7 +20,7 @@ jobs:
     env:
       SCCACHE_GHA_ENABLED: 'true'
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Run sccache-cache
         uses: mozilla-actions/sccache-action@v0.0.3
       - uses: ./
