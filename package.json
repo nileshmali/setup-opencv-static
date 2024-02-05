@@ -1,6 +1,6 @@
 {
   "name": "setup-opencv-static",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "private": true,
   "description": "This action sets up a static OpenCV installation on the GitHub Actions runner.",
   "main": "lib/main.js",
