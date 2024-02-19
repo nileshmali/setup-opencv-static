@@ -34,7 +34,7 @@
     "@actions/tool-cache": "^2.0.1"
   },
   "devDependencies": {
-    "@swc/core": "^1.4.0",
+    "@swc/core": "^1.4.2",
     "@swc/jest": "^0.2.36",
     "@types/node": "^18",
     "@typescript-eslint/parser": "^6.20.0",
