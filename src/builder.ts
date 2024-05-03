@@ -117,8 +117,8 @@ export async function buildAndInstallOpenCV(version: string): Promise<void> {
 
   if (core.getBooleanInput('with-sccache')) {
     core.info('Using sccache')
-    buildArgs.push('-D CMAKE_C_COMPILER_LAUNCHER=sccache')
-    buildArgs.push('-D CMAKE_CXX_COMPILER_LAUNCHER=sccache')
+    buildArgs.push('-D CMAKE_C_COMPILER_LAUNCHER=${SCCACHE_PATH}')
+    buildArgs.push('-D CMAKE_CXX_COMPILER_LAUNCHER=${SCCACHE_PATH}')
   }
 
   buildArgs.push(`/opt/opencv/opencv-${version}`)
@@ -140,7 +140,7 @@ export async function buildAndInstallOpenCV(version: string): Promise<void> {
     core.endGroup()
   }
   core.startGroup('Install OpenCV')
-  await exec(`make -j${nproc()} -C ${BuildDir} install`)
+  await exec(`sudo make -j${nproc()} -C ${BuildDir} install`)
 
   core.exportVariable(
     'OPENCV_LINK_LIBS',
