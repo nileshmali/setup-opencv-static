@@ -116,9 +116,10 @@ export async function buildAndInstallOpenCV(version: string): Promise<void> {
   }
 
   if (core.getBooleanInput('with-sccache')) {
-    core.info('Using sccache')
-    buildArgs.push('-D CMAKE_C_COMPILER_LAUNCHER=sccache')
-    buildArgs.push('-D CMAKE_CXX_COMPILER_LAUNCHER=sccache')
+    const sccachePath = process.env.SCCACHE_PATH
+    core.info(`Using sccache at ${sccachePath}`)
+    buildArgs.push(`-D CMAKE_C_COMPILER_LAUNCHER=${sccachePath}`)
+    buildArgs.push(`-D CMAKE_CXX_COMPILER_LAUNCHER=${sccachePath}`)
   }
 
   buildArgs.push(`/opt/opencv/opencv-${version}`)
