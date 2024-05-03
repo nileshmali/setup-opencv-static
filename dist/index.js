@@ -146,9 +146,10 @@ async function buildAndInstallOpenCV(version) {
         buildArgs.push(`-D OPENCV_EXTRA_MODULES_PATH=/opt/opencv_contrib/opencv_contrib-${version}/modules`);
     }
     if (core.getBooleanInput('with-sccache')) {
-        core.info('Using sccache');
-        buildArgs.push('-D CMAKE_C_COMPILER_LAUNCHER=${SCCACHE_PATH}');
-        buildArgs.push('-D CMAKE_CXX_COMPILER_LAUNCHER=${SCCACHE_PATH}');
+        const sccachePath = process.env.SCCACHE_PATH;
+        core.info(`Using sccache at ${sccachePath}`);
+        buildArgs.push(`-D CMAKE_C_COMPILER_LAUNCHER=${sccachePath}`);
+        buildArgs.push(`-D CMAKE_CXX_COMPILER_LAUNCHER=${sccachePath}`);
     }
     buildArgs.push(`/opt/opencv/opencv-${version}`);
     const hash = computeHash(buildArgs);
