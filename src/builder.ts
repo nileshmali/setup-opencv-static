@@ -140,7 +140,7 @@ export async function buildAndInstallOpenCV(version: string): Promise<void> {
     core.endGroup()
   }
   core.startGroup('Install OpenCV')
-  await exec(`sudo make -j${nproc()} -C ${BuildDir} install`)
+  await exec(`make -j${nproc()} -C ${BuildDir} install`)
 
   core.exportVariable(
     'OPENCV_LINK_LIBS',
