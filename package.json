@@ -25,6 +25,12 @@
   ],
   "author": "Nilesh Mali",
   "license": "MIT",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
   "dependencies": {
     "@actions/cache": "^3.2.4",
     "@actions/core": "^1.10.1",
@@ -36,13 +42,13 @@
   "devDependencies": {
     "@swc/core": "^1.4.17",
     "@swc/jest": "^0.2.36",
-    "@types/node": "^18.19.30",
+    "@types/node": "^20.12.8",
     "@typescript-eslint/eslint-plugin": "^7.8.0",
     "@typescript-eslint/parser": "^7.8.0",
     "@vercel/ncc": "^0.38.1",
     "eslint": "^8.56.0",
     "eslint-plugin-github": "^4.10.2",
-    "eslint-plugin-jest": "^28.2.0",
+    "eslint-plugin-jest": "^28.4.0",
     "jest": "^29.7.0",
     "js-yaml": "^4.1.0",
     "prettier": "^3.2.5",
