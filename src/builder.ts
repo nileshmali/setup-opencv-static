@@ -1,10 +1,10 @@
+import {restoreCache, saveCache} from '@actions/cache'
 import * as core from '@actions/core'
 import {exec} from '@actions/exec'
-import * as crypto from 'crypto'
 import {mkdirP} from '@actions/io'
-import {restoreCache, saveCache} from '@actions/cache'
-import {nproc, platform} from './system'
+import * as crypto from 'crypto'
 import {BuildDir, CacheHit, CachePrimaryKey} from './constants'
+import {nproc, platform} from './system'
 
 export async function buildAndInstallOpenCV(version: string): Promise<void> {
   const buildArgs = [
@@ -22,7 +22,7 @@ export async function buildAndInstallOpenCV(version: string): Promise<void> {
     '-D BUILD_PNG=ON',
     '-D BUILD_PROTOBUF=ON',
     '-D BUILD_SHARED_LIBS=OFF',
-    '-D BUILD_TBB=ON',
+    '-D BUILD_TBB=OFF',
     '-D BUILD_TESTS=OFF',
     '-D BUILD_TIFF=ON',
     '-D BUILD_WEBP=ON',

@@ -31,13 +31,13 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.buildAndInstallOpenCV = buildAndInstallOpenCV;
+const cache_1 = __nccwpck_require__(5116);
 const core = __importStar(__nccwpck_require__(7484));
 const exec_1 = __nccwpck_require__(5236);
-const crypto = __importStar(__nccwpck_require__(6982));
 const io_1 = __nccwpck_require__(4994);
-const cache_1 = __nccwpck_require__(5116);
-const system_1 = __nccwpck_require__(583);
+const crypto = __importStar(__nccwpck_require__(6982));
 const constants_1 = __nccwpck_require__(8729);
+const system_1 = __nccwpck_require__(583);
 async function buildAndInstallOpenCV(version) {
     const buildArgs = [
         '-D BUILD_CUDA_STUBS=OFF',
@@ -54,7 +54,7 @@ async function buildAndInstallOpenCV(version) {
         '-D BUILD_PNG=ON',
         '-D BUILD_PROTOBUF=ON',
         '-D BUILD_SHARED_LIBS=OFF',
-        '-D BUILD_TBB=ON',
+        '-D BUILD_TBB=OFF',
         '-D BUILD_TESTS=OFF',
         '-D BUILD_TIFF=ON',
         '-D BUILD_WEBP=ON',
