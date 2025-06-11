@@ -3,8 +3,8 @@ import * as core from '@actions/core'
 import {exec} from '@actions/exec'
 import {mkdirP} from '@actions/io'
 import * as crypto from 'crypto'
-import {BuildDir, CacheHit, CachePrimaryKey} from './constants'
-import {nproc, platform} from './system'
+import {BuildDir, CacheHit, CachePrimaryKey} from './constants.js'
+import {nproc, platform} from './system.js'
 
 export async function buildAndInstallOpenCV(version: string): Promise<void> {
   const buildArgs = [

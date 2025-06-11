@@ -1,5 +1,5 @@
 import * as core from '@actions/core'
-import * as sys from './system'
+import * as sys from './system.js'
 import {exec} from '@actions/exec'
 
 export async function installDeps(): Promise<void> {

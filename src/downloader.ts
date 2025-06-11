@@ -2,7 +2,7 @@ import * as core from '@actions/core'
 import {getOctokit} from '@actions/github'
 import {downloadTool, extractTar} from '@actions/tool-cache'
 import {format} from 'util'
-import {OutputOpenCVVersion} from './constants'
+import {OutputOpenCVVersion} from './constants.js'
 
 const GZIP_OPENCV_URL = 'https://github.com/opencv/opencv/archive/refs/tags/%s.tar.gz'
 const GZIP_CONTRIB_URL = 'https://github.com/opencv/opencv_contrib/archive/refs/tags/%s.tar.gz'
