@@ -1,6 +1,10 @@
 # Github Action to setup OpenCV static libraries
 
-[![build-test](https://github.com/nileshmali/setup-opencv-static/actions/workflows/test.yml/badge.svg)](https://github.com/nileshmali/setup-opencv-static/actions/workflows/test.yml)
+[![GitHub Super-Linter](https://github.com/nileshmali/setup-opencv-static/actions/workflows/linter.yml/badge.svg)](https://github.com/super-linter/super-linter)
+![CI](https://github.com/nileshmali/setup-opencv-static/actions/workflows/ci.yml/badge.svg)
+[![Check dist/](https://github.com/nileshmali/setup-opencv-static/actions/workflows/check-dist.yml/badge.svg)](https://github.com/nileshmali/setup-opencv-static/actions/workflows/check-dist.yml)
+[![CodeQL](https://github.com/nileshmali/setup-opencv-static/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/nileshmali/setup-opencv-static/actions/workflows/codeql-analysis.yml)
+[![Coverage](./badges/coverage.svg)](./badges/coverage.svg)
 
 This action sets up OpenCV static libraries on Linux. (Windows and MacOS coming soon!)
 

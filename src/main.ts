@@ -3,7 +3,7 @@ import {downloadOpenCV} from './downloader'
 import {installDeps} from './installer'
 import {buildAndInstallOpenCV} from './builder'
 
-async function run(): Promise<void> {
+export async function run(): Promise<void> {
   try {
     await installDeps()
     const paths = await downloadOpenCV()
@@ -13,5 +13,3 @@ async function run(): Promise<void> {
     if (error instanceof Error) core.setFailed(error.message)
   }
 }
-
-run()

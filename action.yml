@@ -1,21 +1,21 @@
-name: "Setup OpenCV Static"
-description: "Setup OpenCV Static"
-author: "Nilesh Mali"
+name: 'Setup OpenCV Static'
+description: 'Setup OpenCV Static'
+author: 'Nilesh Mali'
 inputs:
   opencv-version:
-    description: "OpenCV version to be installed."
+    description: 'OpenCV version to be installed.'
   opencv-contrib:
-    description: "If opencv-contrib (extra modules) should be included in the installation."
-    default: "true"
+    description: 'If opencv-contrib (extra modules) should be included in the installation.'
+    default: 'true'
   github-token:
-    description: "GitHub token to be used for downloading releases."
+    description: 'GitHub token to be used for downloading releases.'
     required: true
   with-sccache:
-    description: "If sccache should be used for caching compilation results, works only if sccache action is added."
-    default: "false"
+    description: 'If sccache should be used for caching compilation results, works only if sccache action is added.'
+    default: 'false'
 runs:
-  using: "node20"
-  main: "dist/index.js"
+  using: 'node20'
+  main: 'dist/index.js'
 branding:
-  icon: "anchor"
-  color: "gray-dark"
+  icon: 'anchor'
+  color: 'gray-dark'

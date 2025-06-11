@@ -1,12 +1,19 @@
-import * as cp from 'child_process'
-import * as path from 'path'
-import {expect, test} from '@jest/globals'
+import {jest} from '@jest/globals'
+import * as core from '../__fixtures__/core.js'
 
-// shows how the runner will run a javascript action with env / stdout protocol
-test('test runs', () => {
-  const np = process.execPath
-  const ip = path.join(__dirname, '..', 'lib', 'main.js')
-  const options: cp.ExecFileSyncOptions = {
-    env: process.env
-  }
+// Mocks should be declared before the module being tested is imported.
+jest.unstable_mockModule('@actions/core', () => core)
+
+// The module being tested should be imported dynamically. This ensures that the
+// mocks are used in place of any actual dependencies.
+const {run} = await import('../src/main.js')
+
+describe('main.ts', () => {
+  afterEach(() => {
+    jest.resetAllMocks()
+  })
+
+  it('Sets the time output', async () => {
+    await run()
+  })
 })
