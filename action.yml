@@ -14,7 +14,7 @@ inputs:
     description: 'If sccache should be used for caching compilation results, works only if sccache action is added.'
     default: 'false'
 runs:
-  using: 'node20'
+  using: 'node24'
   main: 'dist/index.js'
 branding:
   icon: 'anchor'
